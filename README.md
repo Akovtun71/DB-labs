@@ -10,64 +10,63 @@
 **Сутності:**
 1. Customers 
 ```
-CREATE TABLE public.customer
+CREATE TABLE public.customers
 (
-    id bigint NOT NULL,
-    first_name text COLLATE pg_catalog."default",
-    last_name text COLLATE pg_catalog."default",
+    id integer NOT NULL DEFAULT nextval('customers_id_seq'::regclass),
+    first_name text COLLATE pg_catalog."default" NOT NULL,
+    last_name text COLLATE pg_catalog."default" NOT NULL,
     birth_date date,
     deliver_adress text COLLATE pg_catalog."default",
-    CONSTRAINT customer_pkey PRIMARY KEY (id)
+    CONSTRAINT customers_pkey PRIMARY KEY (id)
 )
 ```
 2. Orders:
 ```
 CREATE TABLE public.orders
 (
-    id bigint NOT NULL,
-    product bigint,
-    date date,
-    customer bigint,
+    id integer NOT NULL DEFAULT nextval('orders_id_seq'::regclass),
+    date date NOT NULL,
+    product integer NOT NULL,
+    cutomer integer NOT NULL,
     CONSTRAINT orders_pkey PRIMARY KEY (id),
-    CONSTRAINT customer_fk FOREIGN KEY (customer)
-        REFERENCES public.customer (id) MATCH SIMPLE
+    CONSTRAINT orders_cutomer_fkey FOREIGN KEY (cutomer)
+        REFERENCES public.customers (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT product_fk FOREIGN KEY (product)
+        ON DELETE NO ACTION,
+    CONSTRAINT orders_product_fkey FOREIGN KEY (product)
         REFERENCES public.products (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-        NOT VALID
 )
+
 
 ```
 3. Products:
 ```
 CREATE TABLE public.products
 (
-    id bigint NOT NULL,
-    name text COLLATE pg_catalog."default",
-    price real,
+    id integer NOT NULL DEFAULT nextval('products_id_seq'::regclass),
+    name text COLLATE pg_catalog."default" NOT NULL,
+    price real NOT NULL,
     description text COLLATE pg_catalog."default",
-    quantity bigint,
-    shop bigint,
+    quantity integer NOT NULL,
+    shop integer NOT NULL,
+    photo_url text COLLATE pg_catalog."default",
     CONSTRAINT products_pkey PRIMARY KEY (id),
-    CONSTRAINT shop_fk FOREIGN KEY (shop)
+    CONSTRAINT products_shop_fkey FOREIGN KEY (shop)
         REFERENCES public.shops (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-        NOT VALID
 )
 ```
 4. Shops: 
 ```
 CREATE TABLE public.shops
 (
-    id bigint NOT NULL,
-    adress text COLLATE pg_catalog."default",
     image_url text COLLATE pg_catalog."default",
+    website_url text COLLATE pg_catalog."default",
     shop_name text COLLATE pg_catalog."default",
+    id integer NOT NULL DEFAULT nextval('shops_id_seq'::regclass),
     CONSTRAINT shops_pkey PRIMARY KEY (id)
 )
 ```
